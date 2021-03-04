@@ -8,8 +8,8 @@ I've driven a bus through some probably very well thought out enginerring in ord
 So far, I've only done I2C as I don't have any SPI devices to test with.
 
 Changes:
-* removed try_lock as that concept doesn't seem to exist in MicroPython
-* readto and writeto are both no longer using their start and stop parameters. This may cause a problem for some sensors.
+*removed try_lock as that concept doesn't seem to exist in MicroPython
+*readto and writeto are both no longer using their start and stop parameters. This may cause a problem for some sensors.
 
 Currently tested devices
 Pimoroni BMP280 breakout.
