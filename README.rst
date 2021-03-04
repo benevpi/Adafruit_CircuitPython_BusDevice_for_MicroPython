@@ -17,7 +17,7 @@ Pimoroni BMP280 breakout.
 
 Example code (you'll also need this file saved on your device: https://github.com/adafruit/Adafruit_CircuitPython_BMP280/blob/master/adafruit_bmp280.py)
 
-.. codeblock::
+.. codeblock:: python
     from machine import Pin, I2C
     i2c = I2C(0,scl=Pin(21), sda=Pin(20))
 
