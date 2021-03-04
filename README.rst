@@ -1,60 +1,25 @@
-Adafruit CircuitPython BusDevice
+Adafruit CircuitPython BusDevice For MicroPython
 ================================
 
-.. image:: https://readthedocs.org/projects/adafruit-circuitpython-busdevice/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/busdevice/en/latest/
-    :alt: Documentation Status
+A fork of https://github.com/adafruit/Adafruit_CircuitPython_BusDevice to work in MicroPython on Raspberry Pi Pico. It may or may not work on other MicroPython hardware
 
-.. image :: https://img.shields.io/discord/327254708534116352.svg
-    :target: https://adafru.it/discord
-    :alt: Discord
+I've driven a bus through some probably very well thought out enginerring in order to get this to work. It may or may not need to be added back in at a later stage.
 
-.. image:: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice/workflows/Build%20CI/badge.svg
-    :target: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice/actions/
-    :alt: Build Status
+So far, I've only done I2C as I don't have any SPI devices to test with.
 
-The ``I2CDevice`` and ``SPIDevice`` helper classes make managing transaction state
-on a bus easy. For example, they manage locking the bus to prevent other
-concurrent access. For SPI devices, it manages the chip select and protocol
-changes such as mode. For I2C, it manages the device address.
+Changes:
+* removed try_lock as that concept doesn't seem to exist in MicroPython
+* readto and writeto are both no longer using their start and stop parameters. This may cause a problem for some sensors.
 
-.. _bus_device_installation:
+Currently tested devices
+Pimoroni BMP280 breakout.
 
-On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
-PyPI <https://pypi.org/project/adafruit-circuitpython-busdevice/>`_. To install for current user:
+Example code (you'll also need this file saved on your device: https://github.com/adafruit/Adafruit_CircuitPython_BMP280/blob/master/adafruit_bmp280.py)
 
-.. code-block:: shell
+```
+from machine import Pin, I2C
+i2c = I2C(0,scl=Pin(21), sda=Pin(20))
 
-    pip3 install adafruit-circuitpython-busdevice
-
-To install system-wide (this may be required in some cases):
-
-.. code-block:: shell
-
-    sudo pip3 install adafruit-circuitpython-busdevice
-
-To install in a virtual environment in your current project:
-
-.. code-block:: shell
-
-    mkdir project-name && cd project-name
-    python3 -m venv .env
-    source .env/bin/activate
-    pip3 install adafruit-circuitpython-busdevice
-
-Usage Example
-=============
-
-See examples/read_register_i2c.py and examples/read_register_spi.py for examples of the module's usage.
-
-Contributing
-============
-
-Contributions are welcome! Please read our `Code of Conduct
-<https://github.com/adafruit/Adafruit_CircuitPython_BusDevice/blob/master/CODE_OF_CONDUCT.md>`_
-before contributing to help this project stay welcoming.
-
-Documentation
-=============
-
-For information on building library documentation, please check out `this guide <https://learn.adafruit.com/creating-and-sharing-a-circuitpython-library/sharing-our-docs-on-readthedocs#sphinx-5-1>`_.
+import adafruit_bmp280
+sensor = adafruit_bmp280.Adafruit_BMP280_I2C(i2c, address=0x76)
+```
