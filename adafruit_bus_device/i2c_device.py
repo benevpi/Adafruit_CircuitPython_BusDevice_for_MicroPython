@@ -49,6 +49,7 @@ class I2CDevice:
         if probe:
             self.__probe_for_device()
 
+    #again, breaking stuff by not using start and end
     def readinto(self, buf, *, start=0, end=None):
         """
         Read into ``buf`` from the device. The number of bytes read will be the
@@ -64,8 +65,11 @@ class I2CDevice:
         """
         if end is None:
             end = len(buf)
-        self.i2c.readfrom_into(self.device_address, buf, start=start, end=end)
+        self.i2c.readfrom_into(self.device_address, buf)
 
+
+    #note, the BMP280 not using start and end. This could break some other
+    #sensors though.
     def write(self, buf, *, start=0, end=None):
         """
         Write the bytes from ``buffer`` to the device, then transmit a stop
@@ -81,7 +85,7 @@ class I2CDevice:
         """
         if end is None:
             end = len(buf)
-        self.i2c.writeto(self.device_address, buf, start=start, end=end)
+        self.i2c.writeto(self.device_address, buf)
 
     # pylint: disable-msg=too-many-arguments
     def write_then_readinto(
@@ -134,12 +138,16 @@ class I2CDevice:
     # pylint: enable-msg=too-many-arguments
 
     def __enter__(self):
-        while not self.i2c.try_lock():
-            pass
+        #get rid of try_lock and just barge through.
+        #may need to add this back
+        #while not self.i2c.try_lock():
+        pass
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.i2c.unlock()
+        #again, remove locking and barge through
+        #self.i2c.unlock()
+        pass
         return False
 
     def __probe_for_device(self):
@@ -148,8 +156,8 @@ class I2CDevice:
         if you get an OSError it means the device is not there
         or that the device does not support these means of probing
         """
-        while not self.i2c.try_lock():
-            pass
+        #doesn't like try_lock. Let's just remove.
+        #can add a fix later if needed
         try:
             self.i2c.writeto(self.device_address, b"")
         except OSError:
@@ -162,5 +170,3 @@ class I2CDevice:
                 # pylint: disable=raise-missing-from
                 raise ValueError("No I2C device at address: 0x%x" % self.device_address)
                 # pylint: enable=raise-missing-from
-        finally:
-            self.i2c.unlock()
