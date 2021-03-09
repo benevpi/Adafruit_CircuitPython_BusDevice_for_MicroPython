@@ -23,3 +23,7 @@ Example code (you'll also need this file saved on your device: https://github.co
     import adafruit_bmp280
     sensor = adafruit_bmp280.Adafruit_BMP280_I2C(i2c, address=0x76)
 
+If you get the following error::
+    AttributeError: 'module' object has no attribute 'monotonic'
+    
+you need to do a search and replace for 'monotonic' and replace it with 'ticks_ms'
